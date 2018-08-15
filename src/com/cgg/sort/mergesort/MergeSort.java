@@ -73,7 +73,7 @@ public class MergeSort implements Sort {
     }
 
     public static void main(String[] args) throws Exception {
-        List list = SectionTools.getRandomData(10, 150, 800000);
+        List list = SectionTools.getRandomData(10, 1200000, 1000000);
 //        SectionTools.print(list);
 //        new MergeSort().sort(list, 0, list.size() - 1);
 //        SectionTools.print(list);

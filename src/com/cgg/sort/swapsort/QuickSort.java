@@ -59,7 +59,7 @@ public class QuickSort implements Sort {
     }
 
     public static void main(String[] args) throws Exception {
-        List list = SectionTools.getRandomData(10, 800000, 800000);
+        List list = SectionTools.getRandomData(10, 1200000, 1000000);
 //        SectionTools.print(list);
 //        new QuickSort().sort(list, 0, list.size() - 1);
 //        SectionTools.print(list);
