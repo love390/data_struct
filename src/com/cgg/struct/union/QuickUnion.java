@@ -48,6 +48,7 @@ public class QuickUnion {
      */
     public int parent(int index) {
         while (this.array[index] != index) {
+            this.array[index]=this.array[this.array[index]];//路径压缩
             index = this.array[index];
         }
         return index;
