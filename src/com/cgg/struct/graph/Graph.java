@@ -11,6 +11,9 @@ public abstract class Graph {
     protected int v;//顶点
     protected boolean direct;//是否有向
 
+    public Graph() {
+    }
+
     public Graph(int v, boolean direct) {
         this.v = v;
         this.direct = direct;
@@ -28,6 +31,22 @@ public abstract class Graph {
 
     public int getV() {
         return v;
+    }
+
+    public void setE(int e) {
+        this.e = e;
+    }
+
+    public void setV(int v) {
+        this.v = v;
+    }
+
+    public boolean isDirect() {
+        return direct;
+    }
+
+    public void setDirect(boolean direct) {
+        this.direct = direct;
     }
 
     public abstract void dfs(int v);

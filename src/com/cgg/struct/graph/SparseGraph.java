@@ -1,6 +1,11 @@
 package com.cgg.struct.graph;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
+import java.util.Scanner;
 import java.util.Vector;
 
 /**
@@ -21,6 +26,34 @@ public class SparseGraph extends Graph {
             this.graph.add(new Vector<>());
         this.isVisited = new boolean[v];
         init();
+    }
+
+    public SparseGraph(String filePath, boolean direct) throws FileNotFoundException {
+        File file = new File(filePath);
+        if (!file.exists())
+            throw new FileNotFoundException(filePath + "未找到");
+
+        Scanner scanner = new Scanner(new BufferedInputStream(new FileInputStream(file)));
+        String[] s = scanner.nextLine().split("\\s+");
+        int v = Integer.parseInt(s[0]);
+        int e = Integer.parseInt(s[1]);
+        this.setV(v);
+        this.setE(e);
+        this.setDirect(direct);
+        this.graph = new Vector<>();
+        for (int i = 0; i < this.v; i++) this.graph.add(new Vector<>());
+        this.isVisited = new boolean[v];
+
+        for (int i = 0; i < this.e; i++) {
+            s = scanner.nextLine().split("\\s+");
+            int v1 = Integer.parseInt(s[0]);
+            int v2 = Integer.parseInt(s[1]);
+            this.graph.get(v1).add(v2);
+            if (!this.direct) {
+                this.graph.get(v2).add(v1);
+            }
+        }
+        scanner.close();
     }
 
     private void init() {
@@ -108,8 +141,10 @@ public class SparseGraph extends Graph {
         return true;
     }
 
-    public static void main(String[] args) {
-        SparseGraph sparseGraph = new SparseGraph(20, 10, false);
+    public static void main(String[] args) throws Exception {
+//        SparseGraph sparseGraph = new SparseGraph(20, 10, false);
+        String path = SparseGraph.class.getResource("").getPath() + "graph.txt";
+        SparseGraph sparseGraph = new SparseGraph(path, false);
         sparseGraph.print();
 
         System.out.println("稀疏图深度优先遍历");

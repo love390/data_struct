@@ -1,7 +1,11 @@
 package com.cgg.struct.graph;
 
-import java.util.ArrayList;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
+import java.util.Scanner;
 
 /**
  * @Author cgg 891842749@qq.com
@@ -20,6 +24,33 @@ public class DenseGraph extends Graph {
         this.isVisited = new boolean[v];
         init();
     }
+
+    public DenseGraph(String filePath, boolean direct) throws FileNotFoundException {
+        File file = new File(filePath);
+        if (!file.exists())
+            throw new FileNotFoundException(filePath + "未找到");
+
+        Scanner scanner = new Scanner(new BufferedInputStream(new FileInputStream(file)));
+        String[] s = scanner.nextLine().split("\\s+");
+        int v = Integer.parseInt(s[0]);
+        int e = Integer.parseInt(s[1]);
+        this.setV(v);
+        this.setE(e);
+        this.setDirect(direct);
+        this.graph = new boolean[v][v];
+        this.isVisited = new boolean[v];
+
+        for (int i = 0; i < e; i++) {
+            s = scanner.nextLine().split("\\s+");
+            int v1 = Integer.parseInt(s[0]);
+            int v2 = Integer.parseInt(s[1]);
+            graph[v1][v2] = true;
+            if (!this.direct) graph[v2][v1] = true;
+        }
+
+        scanner.close();
+    }
+
 
     private void init() {
         for (int i = 0; i < this.v; i++) {
@@ -107,8 +138,11 @@ public class DenseGraph extends Graph {
         return true;
     }
 
-    public static void main(String[] args) {
-        DenseGraph denseGraph = new DenseGraph(10, false);
+    public static void main(String[] args) throws Exception {
+//        DenseGraph denseGraph = new DenseGraph(10, false);
+        String path = DenseGraph.class.getResource("").getPath() + "graph.txt";
+        DenseGraph denseGraph = new DenseGraph(path, false);
+
         denseGraph.print();
 
         System.out.println("稠密图深度优先遍历");
@@ -122,6 +156,6 @@ public class DenseGraph extends Graph {
         System.out.println();
 
         System.out.println("连通分量");
-        System.out.println("连通分量数："+denseGraph.connectedComponent());
+        System.out.println("连通分量数：" + denseGraph.connectedComponent());
     }
 }
