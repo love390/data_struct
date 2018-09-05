@@ -35,4 +35,6 @@ public abstract class Graph {
     public abstract void bfs(int v);
 
     public abstract void print();
+
+    public abstract int connectedComponent();//连通分量
 }

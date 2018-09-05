@@ -24,7 +24,7 @@ public class DenseGraph extends Graph {
     private void init() {
         for (int i = 0; i < this.v; i++) {
             for (int j = 0; j < this.v; j++) {
-                if (!this.direct) {
+                if (this.direct) {
                     this.graph[i][j] = Math.random() > 0.5 ? true : false;
                 } else {
                     if (i < j) {
@@ -52,10 +52,7 @@ public class DenseGraph extends Graph {
     public void dfs(int v) {
         this.isVisited[v] = true;
         System.out.print("=>" + v);
-        int start;
-        if (this.direct) start = 0;
-        else start = v;
-        for (int i = start; i < this.v; i++) {
+        for (int i = 0; i < this.v; i++) {
             if (this.graph[v][i] && !this.isVisited[i])
                 dfs(i);
         }
@@ -85,6 +82,31 @@ public class DenseGraph extends Graph {
         for (int i = 0; i < this.v; i++) this.isVisited[i] = false;
     }
 
+    @Override
+    public int connectedComponent() {
+        int rs = 0;
+        reset();
+        while (!isAllvisited()) {
+            for (int i = 0; i < this.v; i++) {
+                if (!this.isVisited[i]) {
+                    dfs(i);
+                    System.out.println();
+                    rs++;
+                }
+            }
+        }
+        return rs;
+    }
+
+    private boolean isAllvisited() {
+        for (int i = 0; i < this.v; i++) {
+            if (!this.isVisited[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         DenseGraph denseGraph = new DenseGraph(10, false);
         denseGraph.print();
@@ -98,5 +120,8 @@ public class DenseGraph extends Graph {
         denseGraph.bfs(0);
         denseGraph.reset();
         System.out.println();
+
+        System.out.println("连通分量");
+        System.out.println("连通分量数："+denseGraph.connectedComponent());
     }
 }

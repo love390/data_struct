@@ -30,6 +30,9 @@ public class SparseGraph extends Graph {
                 int y = (int) (Math.random() * v);
                 if (x != y && !this.graph.get(x).contains(y)) {
                     this.graph.get(x).add(y);
+                    if (!this.direct && !this.graph.get(y).contains(x)) {
+                        this.graph.get(y).add(x);
+                    }
                     break;
                 }
             }
@@ -54,9 +57,6 @@ public class SparseGraph extends Graph {
         while (!queque.isEmpty()) {
             int el = queque.pop();
             System.out.print("=>" + el);
-            int start;
-            if (this.direct) start = 0;
-            else start = el;
             for (int next : graph.get(v)) {
                 if (!this.isVisited[next]) {
                     queque.addLast(next);
@@ -83,6 +83,31 @@ public class SparseGraph extends Graph {
         for (int i = 0; i < this.v; i++) this.isVisited[i] = false;
     }
 
+    @Override
+    public int connectedComponent() {
+        int rs = 0;
+        reset();
+        while (!isAllvisited()) {
+            for (int i = 0; i < this.v; i++) {
+                if (!this.isVisited[i]) {
+                    dfs(i);
+                    System.out.println();
+                    rs++;
+                }
+            }
+        }
+        return rs;
+    }
+
+    private boolean isAllvisited() {
+        for (int i = 0; i < this.v; i++) {
+            if (!this.isVisited[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         SparseGraph sparseGraph = new SparseGraph(20, 10, false);
         sparseGraph.print();
@@ -96,5 +121,8 @@ public class SparseGraph extends Graph {
         sparseGraph.bfs(0);
         sparseGraph.reset();
         System.out.println();
+
+        System.out.println("连通分量");
+        System.out.println("连通分量数：" + sparseGraph.connectedComponent());
     }
 }
