@@ -16,6 +16,12 @@ public abstract class Graph {
         this.direct = direct;
     }
 
+    public Graph(int e, int v, boolean direct) {
+        this.e = e;
+        this.v = v;
+        this.direct = direct;
+    }
+
     public int getE() {
         return e;
     }
@@ -27,4 +33,6 @@ public abstract class Graph {
     public abstract void dfs(int v);
 
     public abstract void bfs(int v);
+
+    public abstract void print();
 }

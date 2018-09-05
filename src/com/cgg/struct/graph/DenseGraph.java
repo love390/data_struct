@@ -36,6 +36,7 @@ public class DenseGraph extends Graph {
         }
     }
 
+    @Override
     public void print() {
         for (int i = 0; i < this.v; i++) {
             System.out.print("顶点" + i + "：");
