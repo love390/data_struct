@@ -1,12 +1,13 @@
-package com.cgg.struct.graph;
+package com.cgg.struct.graph.imp;
+
+import com.cgg.struct.graph.Graph;
+import com.cgg.struct.union.QuickUnion;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * @Author cgg 891842749@qq.com
@@ -17,7 +18,6 @@ import java.util.Vector;
  */
 public class SparseGraph extends Graph {
     private Vector<Vector<Integer>> graph;
-    private boolean isVisited[];
 
     public SparseGraph(int e, int v, boolean direct) {
         super(e, v, direct);
@@ -25,6 +25,7 @@ public class SparseGraph extends Graph {
         for (int i = 0; i < v; i++)
             this.graph.add(new Vector<>());
         this.isVisited = new boolean[v];
+        this.quickUnion = new QuickUnion(v);
         init();
     }
 
@@ -43,12 +44,14 @@ public class SparseGraph extends Graph {
         this.graph = new Vector<>();
         for (int i = 0; i < this.v; i++) this.graph.add(new Vector<>());
         this.isVisited = new boolean[v];
+        this.quickUnion = new QuickUnion(v);
 
         for (int i = 0; i < this.e; i++) {
             s = scanner.nextLine().split("\\s+");
             int v1 = Integer.parseInt(s[0]);
             int v2 = Integer.parseInt(s[1]);
             this.graph.get(v1).add(v2);
+            this.quickUnion.union(v1, v2);
             if (!this.direct) {
                 this.graph.get(v2).add(v1);
             }
@@ -63,6 +66,7 @@ public class SparseGraph extends Graph {
                 int y = (int) (Math.random() * v);
                 if (x != y && !this.graph.get(x).contains(y)) {
                     this.graph.get(x).add(y);
+                    this.quickUnion.union(x, y);
                     if (!this.direct && !this.graph.get(y).contains(x)) {
                         this.graph.get(y).add(x);
                     }
@@ -111,11 +115,6 @@ public class SparseGraph extends Graph {
         }
     }
 
-
-    public void reset() {
-        for (int i = 0; i < this.v; i++) this.isVisited[i] = false;
-    }
-
     @Override
     public int connectedComponent() {
         int rs = 0;
@@ -132,19 +131,26 @@ public class SparseGraph extends Graph {
         return rs;
     }
 
-    private boolean isAllvisited() {
+    /**
+     * 使用并查集来获取连通分量
+     *
+     * @return
+     */
+    @Override
+    public int connectedComponentByUnion() {
+        Set<Integer> integers = new HashSet<>();
         for (int i = 0; i < this.v; i++) {
-            if (!this.isVisited[i]) {
-                return false;
-            }
+            int parent = this.quickUnion.parent(i);
+            integers.add(parent);
         }
-        return true;
+        return integers.size();
     }
 
+
     public static void main(String[] args) throws Exception {
-//        SparseGraph sparseGraph = new SparseGraph(20, 10, false);
-        String path = SparseGraph.class.getResource("").getPath() + "graph.txt";
-        SparseGraph sparseGraph = new SparseGraph(path, false);
+//        Graph sparseGraph = new SparseGraph(20, 10, false);
+        String path = Graph.class.getResource("").getPath() + "graph.txt";
+        Graph sparseGraph = new SparseGraph(path, false);
         sparseGraph.print();
 
         System.out.println("稀疏图深度优先遍历");
@@ -157,7 +163,10 @@ public class SparseGraph extends Graph {
         sparseGraph.reset();
         System.out.println();
 
-        System.out.println("连通分量");
+        System.out.println("使用深度遍历求连通分量");
         System.out.println("连通分量数：" + sparseGraph.connectedComponent());
+
+        System.out.println("使用并查集求连通分量");
+        System.out.println("连通分量数：" + sparseGraph.connectedComponentByUnion());
     }
 }

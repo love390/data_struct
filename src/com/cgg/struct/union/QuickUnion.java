@@ -47,13 +47,13 @@ public class QuickUnion {
      * @return
      */
     public int parent(int index) {
-//        while (this.array[index] != index) {
-//            this.array[index]=this.array[this.array[index]];//路径压缩
-//            index = this.array[index];
-//        }
-        if (this.array[index] != index) {
-            this.array[index] = parent(this.array[index]);
+        while (this.array[index] != index) {
+            this.array[index] = this.array[this.array[index]];//路径压缩1
+            index = this.array[index];
         }
+//        if (this.array[index] != index) {//路径压缩2，由于递归影响，实际效率不如1方案
+//            this.array[index] = parent(this.array[index]);
+//        }
         return this.array[index];
     }
 

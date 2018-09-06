@@ -1,11 +1,16 @@
-package com.cgg.struct.graph;
+package com.cgg.struct.graph.imp;
+
+import com.cgg.struct.graph.Graph;
+import com.cgg.struct.union.QuickUnion;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.Set;
 
 /**
  * @Author cgg 891842749@qq.com
@@ -16,12 +21,12 @@ import java.util.Scanner;
  */
 public class DenseGraph extends Graph {
     private boolean graph[][];
-    private boolean isVisited[];
 
     public DenseGraph(int v, boolean direct) {
         super(v, direct);
         this.graph = new boolean[v][v];
         this.isVisited = new boolean[v];
+        this.quickUnion = new QuickUnion(v);
         init();
     }
 
@@ -39,12 +44,14 @@ public class DenseGraph extends Graph {
         this.setDirect(direct);
         this.graph = new boolean[v][v];
         this.isVisited = new boolean[v];
+        this.quickUnion = new QuickUnion(v);
 
         for (int i = 0; i < e; i++) {
             s = scanner.nextLine().split("\\s+");
             int v1 = Integer.parseInt(s[0]);
             int v2 = Integer.parseInt(s[1]);
             graph[v1][v2] = true;
+            this.quickUnion.union(v1, v2);
             if (!this.direct) graph[v2][v1] = true;
         }
 
@@ -63,6 +70,7 @@ public class DenseGraph extends Graph {
                         this.graph[j][i] = this.graph[i][j];
                     }
                 }
+                if (this.graph[i][j]) this.quickUnion.union(i, j);
             }
         }
     }
@@ -109,10 +117,6 @@ public class DenseGraph extends Graph {
         }
     }
 
-    public void reset() {
-        for (int i = 0; i < this.v; i++) this.isVisited[i] = false;
-    }
-
     @Override
     public int connectedComponent() {
         int rs = 0;
@@ -129,19 +133,25 @@ public class DenseGraph extends Graph {
         return rs;
     }
 
-    private boolean isAllvisited() {
+    /**
+     * 使用并查集来获取连通分量
+     *
+     * @return
+     */
+    @Override
+    public int connectedComponentByUnion() {
+        Set<Integer> integers = new HashSet<>();
         for (int i = 0; i < this.v; i++) {
-            if (!this.isVisited[i]) {
-                return false;
-            }
+            int parent = this.quickUnion.parent(i);
+            integers.add(parent);
         }
-        return true;
+        return integers.size();
     }
 
     public static void main(String[] args) throws Exception {
-//        DenseGraph denseGraph = new DenseGraph(10, false);
-        String path = DenseGraph.class.getResource("").getPath() + "graph.txt";
-        DenseGraph denseGraph = new DenseGraph(path, false);
+//        Graph denseGraph = new DenseGraph(10, false);
+        String path = Graph.class.getResource("").getPath() + "graph.txt";
+        Graph denseGraph = new DenseGraph(path, false);
 
         denseGraph.print();
 
@@ -155,7 +165,10 @@ public class DenseGraph extends Graph {
         denseGraph.reset();
         System.out.println();
 
-        System.out.println("连通分量");
+        System.out.println("使用深度遍历求连通分量");
         System.out.println("连通分量数：" + denseGraph.connectedComponent());
+
+        System.out.println("使用并查集求连通分量");
+        System.out.println("连通分量数：" + denseGraph.connectedComponentByUnion());
     }
 }
