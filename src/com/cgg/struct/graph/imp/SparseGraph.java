@@ -146,6 +146,11 @@ public class SparseGraph extends Graph {
         return integers.size();
     }
 
+    @Override
+    public Integer dijkstra(int start, int end) {
+        return 0;
+    }
+
 
     public static void main(String[] args) throws Exception {
 //        Graph sparseGraph = new SparseGraph(20, 10, false);

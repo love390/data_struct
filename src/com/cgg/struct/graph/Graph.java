@@ -2,6 +2,9 @@ package com.cgg.struct.graph;
 
 import com.cgg.struct.union.QuickUnion;
 
+import java.util.Stack;
+import java.util.Vector;
+
 /**
  * @Author cgg 891842749@qq.com
  * @Date 2018-09-05 12:50:51
@@ -13,7 +16,9 @@ public abstract class Graph {
     protected int v;//顶点
     protected boolean direct;//是否有向
     protected QuickUnion quickUnion;//并查集，快速找到连通分量和判断两点是否连通
-    protected boolean isVisited[];//保存遍历状态
+    protected boolean[] isVisited;//保存遍历状态
+    protected int[] distance;//最短距离
+    protected int[] path;
 
     public Graph() {
     }
@@ -62,6 +67,9 @@ public abstract class Graph {
     public abstract int connectedComponent();//dfs连通分量
 
     public abstract int connectedComponentByUnion();//并查集连通分量
+
+    public abstract Integer dijkstra(int start, int end);//Dijkstra最短路径算法
+
 
     public boolean isConnected(int v1, int v2) {//并查集判断两顶点是否连通
         if (!check(v1) || !check(v2))

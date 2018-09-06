@@ -7,10 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @Author cgg 891842749@qq.com
@@ -20,11 +17,11 @@ import java.util.Set;
  * 稠密图，使用二维数组
  */
 public class DenseGraph extends Graph {
-    private boolean graph[][];
+    private Integer graph[][];
 
     public DenseGraph(int v, boolean direct) {
         super(v, direct);
-        this.graph = new boolean[v][v];
+        this.graph = new Integer[v][v];
         this.isVisited = new boolean[v];
         this.quickUnion = new QuickUnion(v);
         init();
@@ -42,7 +39,7 @@ public class DenseGraph extends Graph {
         this.setV(v);
         this.setE(e);
         this.setDirect(direct);
-        this.graph = new boolean[v][v];
+        this.graph = new Integer[v][v];
         this.isVisited = new boolean[v];
         this.quickUnion = new QuickUnion(v);
 
@@ -50,9 +47,10 @@ public class DenseGraph extends Graph {
             s = scanner.nextLine().split("\\s+");
             int v1 = Integer.parseInt(s[0]);
             int v2 = Integer.parseInt(s[1]);
-            graph[v1][v2] = true;
+            int dis = Integer.parseInt(s[2]);
+            graph[v1][v2] = dis;
             this.quickUnion.union(v1, v2);
-            if (!this.direct) graph[v2][v1] = true;
+            if (!this.direct) graph[v2][v1] = dis;
         }
 
         scanner.close();
@@ -63,14 +61,14 @@ public class DenseGraph extends Graph {
         for (int i = 0; i < this.v; i++) {
             for (int j = 0; j < this.v; j++) {
                 if (this.direct) {
-                    this.graph[i][j] = Math.random() > 0.5 ? true : false;
+                    this.graph[i][j] = Math.random() > 0.5 ? 1 : 0;
                 } else {
                     if (i < j) {
-                        this.graph[i][j] = Math.random() > 0.5 ? true : false;
+                        this.graph[i][j] = Math.random() > 0.5 ? 1 : 0;
                         this.graph[j][i] = this.graph[i][j];
                     }
                 }
-                if (this.graph[i][j]) this.quickUnion.union(i, j);
+                if (this.graph[i][j] == 1) this.quickUnion.union(i, j);
             }
         }
     }
@@ -80,8 +78,8 @@ public class DenseGraph extends Graph {
         for (int i = 0; i < this.v; i++) {
             System.out.print("顶点" + i + "：");
             for (int j = 0; j < this.v; j++) {
-                if (this.graph[i][j])
-                    System.out.print(j + " ");
+                if (this.graph[i][j] != null)
+                    System.out.print(j + "路径长度" + this.graph[i][j] + " ");
             }
             System.out.println();
         }
@@ -92,7 +90,7 @@ public class DenseGraph extends Graph {
         this.isVisited[v] = true;
         System.out.print("=>" + v);
         for (int i = 0; i < this.v; i++) {
-            if (this.graph[v][i] && !this.isVisited[i])
+            if (this.graph[v][i] != null && !this.isVisited[i])
                 dfs(i);
         }
     }
@@ -109,7 +107,7 @@ public class DenseGraph extends Graph {
             if (this.direct) start = 0;
             else start = el;
             for (int i = start; i < this.v; i++) {
-                if (this.graph[el][i] && !this.isVisited[i]) {
+                if (this.graph[el][i] != null && !this.isVisited[i]) {
                     queque.addLast(i);
                     this.isVisited[i] = true;
                 }
@@ -148,6 +146,59 @@ public class DenseGraph extends Graph {
         return integers.size();
     }
 
+    @Override
+    public Integer dijkstra(int start, int end) {
+        if (!check(start) || !check(end))
+            throw new IllegalArgumentException("参数越界");
+        this.distance = new int[this.v];
+        this.path = new int[this.v];
+        for (int i = 0; i < this.v; i++) {
+            if (this.graph[start][i] != null) {
+                this.distance[i] = this.graph[start][i];
+                this.path[i] = start;
+            } else this.distance[i] = 100;
+        }
+        this.reset();
+        dijkstra(start);
+        this.reset();
+
+        Stack<Integer> integers = new Stack<>();
+        integers.push(end);
+        int index = end;
+        while (this.path[index] != 0) {
+            integers.push(this.path[index]);
+            index = this.path[index];
+        }
+        integers.push(start);
+        System.out.print("起点"+start+"终点"+end+"路径");
+        while (!integers.empty()) {
+            System.out.print("=》" + integers.pop());
+        }
+        System.out.println();
+        return this.distance[end];
+    }
+
+    private void dijkstra(int v) {
+        this.isVisited[v] = true;
+        for (int i = 0; i < this.v; i++) {
+            if (this.graph[v][i] != null && !this.isVisited[i])//松弛操作
+                if (this.graph[v][i] + this.distance[v] < this.distance[i]) {
+                    this.distance[i] = this.graph[v][i] + this.distance[v];
+                    this.path[i] = v;
+                }
+        }
+
+        Integer next = null;
+        for (int i = 0; i < this.v; i++) {
+            if (!this.isVisited[i]) {
+                if (next == null) next = i;
+                else if (this.distance[next] > this.distance[i]) next = i;
+            }
+        }
+        if (next == null) return;
+        dijkstra(next);
+    }
+
     public static void main(String[] args) throws Exception {
 //        Graph denseGraph = new DenseGraph(10, false);
         String path = Graph.class.getResource("").getPath() + "graph.txt";
@@ -170,5 +221,8 @@ public class DenseGraph extends Graph {
 
         System.out.println("使用并查集求连通分量");
         System.out.println("连通分量数：" + denseGraph.connectedComponentByUnion());
+
+        System.out.println("使用dijkstra求最短路径");
+        System.out.println("最短路径：" + denseGraph.dijkstra(0, denseGraph.getV() - 1));
     }
 }
