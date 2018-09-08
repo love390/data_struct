@@ -12,6 +12,8 @@ public class Program26 {
      * <p>
      * 不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
      *
+     * 因为已经有序，设当前判断值为val,可以直接while略过所有val的值，后返回下个值下标-1的val所在最后的标
+     *
      * @param nums
      * @return
      */
@@ -28,6 +30,12 @@ public class Program26 {
         return len;
     }
 
+    /**
+     * while循环返回index所在位置值最后出现的下标位置
+     * @param nums
+     * @param index
+     * @return
+     */
     private int nextIndex(int[] nums, int index) {
         int next = index;
         while (next < nums.length && nums[next] == nums[index]) next++;

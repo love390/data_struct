@@ -12,6 +12,8 @@ public class Program80 {
      * <p>
      * 不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
      *
+     * 由完成的26改编而来
+     *
      * @param nums
      * @return
      */
@@ -21,7 +23,7 @@ public class Program80 {
         for (int index = 0; index < nums.length; ) {
             int nextIndex = nextIndex(nums, index);
             if (nextIndex >= index && nextIndex < nums.length) {
-                if (nextIndex - 1>=0 && nums[nextIndex - 1] == nums[index]) {
+                if (nextIndex - 1>=0 && nums[nextIndex - 1] == nums[index]) {//和26题解法的不同之处，判断前一个元素是不是一样的，是就加加进去
                     swap(nums, len++, nextIndex - 1);
                     index = nextIndex + 1;
                 }
