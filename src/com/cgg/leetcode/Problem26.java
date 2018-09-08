@@ -2,17 +2,17 @@ package com.cgg.leetcode;
 
 /**
  * @Author cgg 891842749@qq.com
- * @Date 2018-09-08 20:12:43
+ * @Date 2018-09-08 19:42:04
  * @Description gitee:www.gitee.com/cgggitee/
  * github:https://github.com/love390/
  */
-public class Program80 {
+public class Problem26 {
     /**
-     * 给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素最多出现两次，返回移除后数组的新长度。
+     * 给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素只出现一次，返回移除后数组的新长度。
      * <p>
      * 不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
      *
-     * 由完成的26改编而来
+     * 因为已经有序，设当前判断值为val,可以直接while略过所有val的值，后返回下个值下标-1的val所在最后的标
      *
      * @param nums
      * @return
@@ -23,10 +23,6 @@ public class Program80 {
         for (int index = 0; index < nums.length; ) {
             int nextIndex = nextIndex(nums, index);
             if (nextIndex >= index && nextIndex < nums.length) {
-                if (nextIndex - 1>=0 && nums[nextIndex - 1] == nums[index]) {//和26题解法的不同之处，判断前一个元素是不是一样的，是就加加进去
-                    swap(nums, len++, nextIndex - 1);
-                    index = nextIndex + 1;
-                }
                 swap(nums, len++, nextIndex);
                 index = nextIndex + 1;
             }
@@ -34,6 +30,12 @@ public class Program80 {
         return len;
     }
 
+    /**
+     * while循环返回index所在位置值最后出现的下标位置
+     * @param nums
+     * @param index
+     * @return
+     */
     private int nextIndex(int[] nums, int index) {
         int next = index;
         while (next < nums.length && nums[next] == nums[index]) next++;
@@ -47,8 +49,8 @@ public class Program80 {
     }
 
     public static void main(String[] args) {
-        int nums[] = new int[]{1,2};
-        int size = new Program80().removeDuplicates(nums);
+        int nums[] = new int[]{1,1,2};
+        int size=new Problem26().removeDuplicates(nums);
         for (int i = 0; i < size; i++) System.out.print(nums[i] + " ");
         System.out.println();
     }
