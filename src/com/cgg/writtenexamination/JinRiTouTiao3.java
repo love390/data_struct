@@ -9,7 +9,7 @@ import java.util.Scanner;
  * @Description gitee:www.gitee.com/cgggitee/
  * github:https://github.com/love390/
  */
-public class a3 {
+public class JinRiTouTiao3 {
     public String[] compute(char[][] chars, String[] strings) {
         return null;
     }

@@ -8,7 +8,7 @@ import java.util.Scanner;
  * @Description gitee:www.gitee.com/cgggitee/
  * github:https://github.com/love390/
  */
-public class a4 {
+public class Problem7 {
     private int[] flag;
     private int red;
     private int blue;
@@ -49,14 +49,14 @@ public class a4 {
     }
 
     public static void main(String[] args) {
-        a4 a4 = new a4();
+        Problem7 Problem7 = new Problem7();
         Scanner scanner = new Scanner(System.in);
         while (scanner.hasNext()) {
             String[] integers = scanner.nextLine().trim().split("\\s+");
             int n = Integer.parseInt(integers[0]);
             int m = Integer.parseInt(integers[1]);
             int k = Integer.parseInt(integers[2]);
-            System.out.println(a4.compute(n, m, k));
+            System.out.println(Problem7.compute(n, m, k));
         }
         scanner.close();
     }
