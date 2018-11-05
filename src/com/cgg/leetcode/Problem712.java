@@ -192,7 +192,6 @@ public class Problem712 {
 
         for (char c : c1) {
             int num1 = characterIntegerHashMap1.containsKey(c) ? characterIntegerHashMap1.get(c) : 0;
-            ;
             int num2 = characterIntegerHashMap2.containsKey(c) ? characterIntegerHashMap2.get(c) : 0;
             rs += (num1 - num2) * c;
             characterIntegerHashMap1.remove(c);
