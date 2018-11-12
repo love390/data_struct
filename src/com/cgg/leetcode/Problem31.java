@@ -21,6 +21,10 @@ public class Problem31 {
      * 3,2,1 → 1,2,3
      *
      * 100%AC
+     * 从后往前扫
+     * a[0,j,...,i]
+     * 将最近的a[i]>a[j]的数对调后，a[j+1]重新从小到大排序
+     *
      * @param nums
      */
     public void nextPermutation(int[] nums) {
@@ -52,26 +56,26 @@ public class Problem31 {
         Problem31 problem31 = new Problem31();
         int[] nums = new int[]{1, 2, 3};
         problem31.nextPermutation(nums);
-        System.out.println(Arrays.toString(nums));
+        System.out.println(Arrays.toString(nums).equals("[1, 3, 2]"));
 
         nums = new int[]{};
         problem31.nextPermutation(nums);
-        System.out.println(Arrays.toString(nums));
+        System.out.println(Arrays.toString(nums).equals("[]"));
 
         nums = new int[]{1, 2, 3, 5, 4};
         problem31.nextPermutation(nums);
-        System.out.println(Arrays.toString(nums));
+        System.out.println(Arrays.toString(nums).equals("[1, 2, 4, 3, 5]"));
 
         nums = new int[]{2, 3, 1};
         problem31.nextPermutation(nums);
-        System.out.println(Arrays.toString(nums));
+        System.out.println(Arrays.toString(nums).equals("[3, 1, 2]"));
 
         nums = new int[]{4,2,0,2,3,2,0};
         problem31.nextPermutation(nums);
-        System.out.println(Arrays.toString(nums));
+        System.out.println(Arrays.toString(nums).equals("[4, 2, 0, 3, 0, 2, 2]"));
 
         nums = new int[]{1,3,2};
         problem31.nextPermutation(nums);
-        System.out.println(Arrays.toString(nums));
+        System.out.println(Arrays.toString(nums).equals("[2, 1, 3]"));
     }
 }
